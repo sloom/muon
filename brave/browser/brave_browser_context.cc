@@ -7,6 +7,7 @@
 
 #include "brave/browser/brave_browser_context.h"
 
+#include "atom/browser/atom_download_manager_delegate.h"
 #include "base/path_service.h"
 #include "base/files/file_path.h"
 #include "base/files/file_util.h"
@@ -16,6 +17,7 @@
 #include "chrome/browser/chrome_notification_types.h"
 #include "chrome/browser/custom_handlers/protocol_handler_registry.h"
 #include "chrome/browser/custom_handlers/protocol_handler_registry_factory.h"
+#include "chrome/browser/devtools/devtools_window.h"
 #include "chrome/browser/profiles/profile_manager.h"
 #include "chrome/common/chrome_paths.h"
 #include "chrome/common/pref_names.h"
@@ -462,6 +464,7 @@ void BraveBrowserContext::CreateProfilePrefs(
         pref_registry_.get());
     extensions::ExtensionPrefs::RegisterProfilePrefs(pref_registry_.get());
 #endif
+    DevToolsWindow::RegisterProfilePrefs(pref_registry_.get());
     BrowserContextDependencyManager::GetInstance()->
         RegisterProfilePrefsForServices(this, pref_registry_.get());
 
@@ -636,6 +639,17 @@ BraveBrowserContext::GetIOTaskRunner() {
   return JsonPrefStore::GetTaskRunnerForFile(
       GetPath(), BrowserThread::GetBlockingPool());
 }
+
+content::DownloadManagerDelegate*
+BraveBrowserContext::GetDownloadManagerDelegate() {
+  if (!download_manager_delegate_.get()) {
+    auto download_manager = content::BrowserContext::GetDownloadManager(this);
+    download_manager_delegate_.reset(
+        new atom::AtomDownloadManagerDelegate(download_manager, this));
+  }
+  return download_manager_delegate_.get();
+}
+
 
 base::FilePath BraveBrowserContext::last_selected_directory() {
   return GetPrefs()->GetFilePath(prefs::kSelectFileLastDirectory);

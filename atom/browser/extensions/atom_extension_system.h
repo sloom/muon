@@ -10,37 +10,11 @@
 
 #include "base/memory/weak_ptr.h"
 #include "brave/browser/brave_browser_context.h"
+#include "chrome/browser/extensions/extension_service.h"
 #include "content/public/browser/notification_observer.h"
 #include "content/public/browser/notification_registrar.h"
 #include "extensions/browser/extension_system.h"
 #include "extensions/common/one_shot_event.h"
-
-class HostContentSettingsMap;
-
-class ExtensionService {
- public:
-  virtual bool IsExtensionEnabled(const std::string& extension_id) const = 0;
-  virtual const extensions::Extension*
-                        GetInstalledExtension(const std::string& id) const = 0;
-  virtual void EnableExtension(const std::string& extension_id) = 0;
-  virtual void DisableExtension(const std::string& extension_id,
-                        int disable_reasons) = 0;
-  virtual void NotifyExtensionLoaded(
-                                  const extensions::Extension* extension) = 0;
-  virtual void NotifyExtensionUnloaded(
-      const extensions::Extension* extension,
-      extensions::UnloadedExtensionReason reason) = 0;
-  virtual const extensions::Extension* AddExtension(
-                                  const extensions::Extension* extension) = 0;
-  virtual const extensions::Extension* GetExtensionById(
-      const std::string& id,
-      bool include_disabled) const = 0;
-
-  virtual void RegisterContentSettings(
-      HostContentSettingsMap* host_content_settings_map) = 0;
-
-  virtual bool is_ready() = 0;
-};
 
 namespace extensions {
 
@@ -126,6 +100,7 @@ class AtomExtensionSystem : public ExtensionSystem {
     void EnableExtension(const std::string& extension_id) override;
     void DisableExtension(const std::string& extension_id,
                           int disable_reasons) override;
+
     void RegisterContentSettings(
         HostContentSettingsMap* host_content_settings_map) override;
 

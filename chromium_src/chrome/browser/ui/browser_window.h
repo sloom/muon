@@ -6,6 +6,10 @@
 #define CHROME_BROWSER_UI_BROWSER_WINDOW_H_
 
 #include "ui/base/base_window.h"
+#include "chrome/browser/ui/browser.h"
+#include "chrome/browser/ui/exclusive_access/exclusive_access_context.h"
+#include "content/public/browser/keyboard_event_processing_result.h"
+#include "content/public/browser/native_web_keyboard_event.h"
 
 class BrowserWindow : public ui::BaseWindow {
  public:
@@ -22,6 +26,16 @@ class BrowserWindow : public ui::BaseWindow {
   virtual ~BrowserWindow() {}
   virtual bool IsVisibleOnAllWorkspaces() { return false; }
   virtual std::string GetWorkspace() { return std::string(); }
+
+  virtual content::KeyboardEventProcessingResult PreHandleKeyboardEvent(
+      const content::NativeWebKeyboardEvent& event) {
+    return content::KeyboardEventProcessingResult::NOT_HANDLED;
+  }
+  virtual void HandleKeyboardEvent(
+      const content::NativeWebKeyboardEvent& event) {}
+  virtual void UpdateDevTools() {}
+  virtual void UpdateToolbar(content::WebContents* contents) {}
+  virtual ExclusiveAccessContext* GetExclusiveAccessContext() { return nullptr; }
 };
 
 #endif  // CHROME_BROWSER_UI_BROWSER_WINDOW_H_

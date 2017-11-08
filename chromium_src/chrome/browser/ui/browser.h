@@ -20,6 +20,7 @@
 #include "base/strings/string16.h"
 #include "build/build_config.h"
 #include "components/sessions/core/session_id.h"
+#include "content/public/browser/page_navigator.h"
 #include "content/public/browser/web_contents.h"
 #include "content/public/browser/web_contents_delegate.h"
 #include "ui/base/ui_base_types.h"
@@ -32,7 +33,8 @@ class ScopedKeepAlive;
 class TabStripModel;
 class TabStripModelDelegate;
 
-class Browser : public content::WebContentsDelegate {
+class Browser : public content::WebContentsDelegate,
+                public content::PageNavigator {
  public:
   // SessionService::WindowType mirrors these values.  If you add to this
   // enum, look at SessionService::WindowType to see if it needs to be
@@ -58,9 +60,11 @@ class Browser : public content::WebContentsDelegate {
   };
 
   struct CreateParams {
-    explicit CreateParams(Profile* profile);
-    CreateParams(Type type, Profile* profile);
+    explicit CreateParams(Profile* profile, bool user_gesture);
+    CreateParams(Type type, Profile* profile, bool user_gesture);
     CreateParams(const CreateParams& other);
+
+    static CreateParams CreateForDevTools(Profile* profile);
 
     // The browser type.
     Type type;
@@ -80,6 +84,8 @@ class Browser : public content::WebContentsDelegate {
     ui::WindowShowState initial_show_state;
 
     bool is_session_restore;
+
+    bool user_gesture;
 
     // Supply a custom BrowserWindow implementation, to be used instead of the
     // default. Intended for testing.
@@ -188,14 +194,15 @@ class Browser : public content::WebContentsDelegate {
   void UnregisterKeepAlive();
 
   bool is_type_tabbed() const { return type_ == TYPE_TABBED; }
-  // bool is_type_popup() const { return type_ == TYPE_POPUP; }
+  bool is_type_popup() const { return type_ == TYPE_POPUP; }
 
   bool is_app() const;
-  bool is_devtools() const { return false; }
+  bool is_devtools() const;
 
   bool ShouldRunUnloadListenerBeforeClosing(content::WebContents* web_contents);
   bool RunUnloadListenerBeforeClosing(content::WebContents* web_contents);
 
+  content::WebContents* OpenURL(const content::OpenURLParams& params) override;
  private:
 
   // Implementation of SupportsWindowFeature and CanSupportWindowFeature. If

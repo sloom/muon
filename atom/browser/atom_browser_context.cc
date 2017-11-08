@@ -8,11 +8,9 @@
 
 #include "atom/browser/api/atom_api_protocol.h"
 #include "atom/browser/atom_browser_main_parts.h"
-#include "atom/browser/atom_download_manager_delegate.h"
 #include "atom/browser/browser.h"
 #include "atom/browser/net/asar/asar_protocol_handler.h"
 #include "atom/browser/net/atom_cert_verifier.h"
-#include "atom/browser/net/atom_network_delegate.h"
 #include "atom/browser/net/atom_ssl_config_service.h"
 #include "atom/browser/net/http_protocol_handler.h"
 #include "atom/common/atom_version.h"
@@ -59,8 +57,7 @@ class NoCacheBackend : public net::HttpCache::BackendFactory {
 AtomBrowserContext::AtomBrowserContext(
     const std::string& partition, bool in_memory,
     const base::DictionaryValue& options)
-    : brightray::BrowserContext(partition, in_memory),
-      network_delegate_(new AtomNetworkDelegate) {
+    : brightray::BrowserContext(partition, in_memory) {
   // Read options.
   use_cache_ = true;
   options.GetBoolean("cache", &use_cache_);
@@ -70,10 +67,6 @@ AtomBrowserContext::AtomBrowserContext(
 }
 
 AtomBrowserContext::~AtomBrowserContext() {
-}
-
-net::NetworkDelegate* AtomBrowserContext::CreateNetworkDelegate() {
-  return network_delegate_;
 }
 
 std::unique_ptr<net::URLRequestJobFactory>
@@ -124,16 +117,6 @@ AtomBrowserContext::CreateHttpCacheBackendFactory(
     return new NoCacheBackend;
   else
     return brightray::BrowserContext::CreateHttpCacheBackendFactory(base_path);
-}
-
-content::DownloadManagerDelegate*
-AtomBrowserContext::GetDownloadManagerDelegate() {
-  if (!download_manager_delegate_.get()) {
-    auto download_manager = content::BrowserContext::GetDownloadManager(this);
-    download_manager_delegate_.reset(
-        new AtomDownloadManagerDelegate(download_manager));
-  }
-  return download_manager_delegate_.get();
 }
 
 std::unique_ptr<net::CertVerifier> AtomBrowserContext::CreateCertVerifier() {

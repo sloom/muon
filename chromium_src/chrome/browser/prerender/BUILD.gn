@@ -1,4 +1,7 @@
 source_set("prerender") {
+  configs += [ "//electron/build:electron_config" ]
+  configs += [ "//electron/chromium_src:chromium_src_config" ]
+
   sources = [
     "prerender_contents.cc",
     "prerender_manager.cc",

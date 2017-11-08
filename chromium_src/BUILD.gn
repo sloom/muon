@@ -158,6 +158,7 @@ source_set("browser") {
     "//components/crash/content/app",
     "//components/crash/core/browser",
     "//components/data_usage/core",
+    "//components/infobars/core",
     "//components/prefs",
     "//components/ssl_config",
     "//components/spellcheck:build_features",
@@ -204,6 +205,10 @@ source_set("browser") {
     "//chrome/browser/gpu/gpu_mode_manager.cc",
     "//chrome/browser/gpu/gpu_mode_manager.h",
 
+    "//chrome/browser/infobars/infobar_service.cc",
+    "//chrome/browser/infobars/infobar_service.h",
+    "chrome/browser/ui/views/infobars/confirm_infobar.cc",
+
     "//chrome/browser/icon_loader.cc",
     "//chrome/browser/icon_loader.h",
     "//chrome/browser/icon_loader_mac.mm",
@@ -233,7 +238,7 @@ source_set("browser") {
     "//chrome/browser/ui/browser_list.cc",
     "//chrome/browser/ui/browser_list.h",
     "chrome/browser/ui/browser.cc",
-    "//chrome/browser/ui/browser.h",
+    "chrome/browser/ui/browser.h",
     "chrome/browser/ui/browser_otr_state.cc",
 
     "//chrome/browser/ui/chrome_select_file_policy.h",
@@ -486,43 +491,11 @@ source_set("browser") {
     ]
 
     if (enable_extensions) {
-      sources += [
-        "chrome/browser/extensions/extension_util.cc",
-        "//chrome/browser/extensions/extension_util.h",
-        "chrome/browser/extensions/extension_tab_util.cc",
-        "//chrome/browser/extensions/extension_tab_util.h",
-        "chrome/browser/extensions/api/messaging/incognito_connectability.cc",
-        "//chrome/browser/extensions/api/messaging/incognito_connectability.h",
-        "//chrome/browser/extensions/api/messaging/chrome_messaging_delegate.cc",
-        "//chrome/browser/extensions/api/messaging/chrome_messaging_delegate.h",
-        "//chrome/browser/extensions/api/messaging/native_message_port.cc",
-        "//chrome/browser/extensions/api/messaging/native_message_port.h",
-        "//chrome/browser/extensions/api/messaging/native_messaging_host_manifest.cc",
-        "//chrome/browser/extensions/api/messaging/native_messaging_host_manifest.h",
-        "//chrome/browser/extensions/api/messaging/native_messaging_policy_handler.cc",
-        "//chrome/browser/extensions/api/messaging/native_messaging_policy_handler.h",
-        "//chrome/browser/extensions/api/messaging/native_message_process_host.cc",
-        "//chrome/browser/extensions/api/messaging/native_message_process_host.h",
-        "//chrome/browser/extensions/api/messaging/native_process_launcher.cc",
-        "//chrome/browser/extensions/api/messaging/native_process_launcher.h",
-        "//chrome/browser/extensions/api/messaging/native_process_launcher_posix.cc",
-        "//chrome/browser/extensions/api/messaging/native_process_launcher_win.cc",
-        "//chrome/browser/extensions/api/spellcheck/spellcheck_api.cc",
-        "//chrome/browser/extensions/api/spellcheck/spellcheck_api.h",
-        "//chrome/browser/extensions/api/tabs/tabs_constants.cc",
-        "//chrome/browser/extensions/api/tabs/tabs_constants.h",
-        "//chrome/browser/extensions/chrome_extension_api_frame_id_map_helper.cc",
-        "//chrome/browser/extensions/chrome_extension_api_frame_id_map_helper.h",
-        "//chrome/browser/extensions/event_router_forwarder.cc",
-        "//chrome/browser/extensions/event_router_forwarder.h",
-      ]
-
       deps += [
-        "//components/spellcheck/browser",
-        "//extensions/browser",
-        "//rlz/features",
+        "chrome/browser/extensions",
       ]
     }
+
     if (use_aura) {
       sources += [
         "//chrome/browser/ui/views/color_chooser_aura.cc",
@@ -610,34 +583,8 @@ source_set("devtools") {
   configs += [ ":chromium_src_config" ]
 
   sources = [
-    "//chrome/browser/devtools/devtools_contents_resizing_strategy.cc",
-    "//chrome/browser/devtools/devtools_contents_resizing_strategy.h",
-    "//chrome/browser/devtools/devtools_embedder_message_dispatcher.cc",
-    "//chrome/browser/devtools/devtools_embedder_message_dispatcher.h",
-    "//chrome/browser/devtools/devtools_file_system_indexer.cc",
-    "//chrome/browser/devtools/devtools_file_system_indexer.h",
-    "//chrome/browser/devtools/devtools_network_conditions.cc",
-    "//chrome/browser/devtools/devtools_network_conditions.h",
-    "//chrome/browser/devtools/devtools_network_controller.cc",
-    "//chrome/browser/devtools/devtools_network_controller.h",
-    "//chrome/browser/devtools/devtools_network_controller_handle.cc",
-    "//chrome/browser/devtools/devtools_network_controller_handle.h",
-    "//chrome/browser/devtools/devtools_network_interceptor.cc",
-    "//chrome/browser/devtools/devtools_network_interceptor.h",
-    "//chrome/browser/devtools/devtools_network_protocol_handler.cc",
-    "//chrome/browser/devtools/devtools_network_protocol_handler.h",
-    "//chrome/browser/devtools/devtools_network_transaction_factory.cc",
-    "//chrome/browser/devtools/devtools_network_transaction_factory.h",
-    "//chrome/browser/devtools/devtools_network_transaction.cc",
-    "//chrome/browser/devtools/devtools_network_transaction.h",
-    "//chrome/browser/devtools/devtools_network_upload_data_stream.cc",
-    "//chrome/browser/devtools/devtools_network_upload_data_stream.h",
-    "//chrome/browser/devtools/devtools_protocol.cc",
-    "//chrome/browser/devtools/devtools_protocol.h",
-    "//chrome/browser/devtools/url_constants.cc",
-    "//chrome/browser/devtools/url_constants.h",
-    "$root_gen_dir/chrome/browser/devtools/devtools_protocol_constants.cc",
-    "$root_gen_dir/chrome/browser/devtools/devtools_protocol_constants.h",
+    "//chrome/browser/ui/webui/devtools_ui.cc",
+    "//chrome/browser/ui/webui/devtools_ui.h",
   ]
 
   configs += [
@@ -647,6 +594,7 @@ source_set("devtools") {
   ]
 
   deps = [
+    "//chrome/browser/devtools",
     "//base",
     "//content/public/browser",
     "//net",
@@ -843,6 +791,8 @@ source_set("downloads") {
     "//chrome/browser/download/download_core_service.h",
     "//chrome/browser/download/download_path_reservation_tracker.cc",
     "//chrome/browser/download/download_path_reservation_tracker.h",
+    "chrome/browser/download/download_prefs.cc",
+    "//chrome/browser/download/download_prefs.h",
     "chrome/browser/download/download_request_limiter.cc",
     "//chrome/browser/download/download_request_limiter.h",
   ]

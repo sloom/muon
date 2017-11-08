@@ -28,6 +28,7 @@
 #include "base/threading/thread_task_runner_handle.h"
 #include "base/time/default_tick_clock.h"
 #include "base/trace_event/trace_event.h"
+#include "brightray/browser/devtools_manager_delegate.h"
 #include "browser/media/media_capture_devices_dispatcher.h"
 #include "chrome/browser/browser_shutdown.h"
 #include "chrome/browser/profiles/profile_manager.h"
@@ -43,6 +44,7 @@
 #include "components/prefs/pref_service.h"
 #include "content/public/browser/browser_thread.h"
 #include "content/public/browser/child_process_security_policy.h"
+#include "content/public/browser/devtools_manager_delegate.h"
 #include "content/public/browser/web_ui_controller_factory.h"
 #include "content/public/common/content_switches.h"
 #include "device/geolocation/geolocation_delegate.h"
@@ -361,7 +363,11 @@ void AtomBrowserMainParts::PreMainMessageLoopRun() {
 #endif
 
   browser_context_ = ProfileManager::GetActiveUserProfile();
-  brightray::BrowserMainParts::PreMainMessageLoopRun();
+
+  // --remote-debugging-port
+  if (command_line->HasSwitch(switches::kRemoteDebuggingPort)) {
+    brightray::DevToolsManagerDelegate::StartHttpHandler();
+  }
 
   js_env_->OnMessageLoopCreated();
   node_bindings_->PrepareMessageLoop();
@@ -411,6 +417,7 @@ void AtomBrowserMainParts::PostMainMessageLoopStart() {
 void AtomBrowserMainParts::PostMainMessageLoopRun() {
   browser_context_ = nullptr;
   brightray::BrowserMainParts::PostMainMessageLoopRun();
+  brightray::DevToolsManagerDelegate::StopHttpHandler();
 
   js_env_->OnMessageLoopDestroying();
 

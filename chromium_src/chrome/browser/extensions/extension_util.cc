@@ -39,19 +39,9 @@ namespace util {
 
 namespace {
 
-const char kSupervisedUserExtensionPermissionIncreaseFieldTrialName[] =
-    "SupervisedUserExtensionPermissionIncrease";
-
 // The entry into the prefs used to flag an extension as installed by custodian.
 // It is relevant only for supervised users.
 const char kWasInstalledByCustodianPrefName[] = "was_installed_by_custodian";
-
-// Returns true if |extension| should always be enabled in incognito mode.
-bool IsWhitelistedForIncognito(const Extension* extension) {
-  const Feature* feature = FeatureProvider::GetBehaviorFeature(
-      behavior_feature::kWhitelistedForIncognito);
-  return feature && feature->IsAvailableToExtension(extension).is_available();
-}
 
 }  // namespace
 

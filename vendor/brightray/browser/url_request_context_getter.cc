@@ -12,7 +12,6 @@
 #include "base/threading/sequenced_worker_pool.h"
 #include "base/threading/worker_pool.h"
 #include "browser/net_log.h"
-#include "browser/network_delegate.h"
 #include "chrome/browser/devtools/devtools_network_controller_handle.h"
 #include "chrome/browser/devtools/devtools_network_transaction_factory.h"
 #include "chrome/browser/net/chrome_mojo_proxy_resolver_factory.h"

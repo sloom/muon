@@ -58,6 +58,7 @@
 #include "chrome/browser/custom_handlers/protocol_handler_registry_factory.h"
 #include "chrome/browser/favicon/favicon_utils.h"
 #include "chrome/browser/history/history_tab_helper.h"
+#include "chrome/browser/infobars/infobar_service.h"
 #include "chrome/browser/printing/print_preview_message_handler.h"
 #include "chrome/browser/printing/print_view_manager.h"
 #include "chrome/browser/printing/print_view_manager_common.h"
@@ -483,6 +484,7 @@ void WebContents::CompleteInit(v8::Isolate* isolate,
   if (!IsBackgroundPage()) {
     // Initialize the tab helper
     extensions::TabHelper::CreateForWebContents(web_contents);
+    InfoBarService::CreateForWebContents(web_contents);
 
     if (name == "browserAction") {
       // hack for browserAction
@@ -1413,7 +1415,7 @@ void WebContents::DevToolsOpened() {
   devtools_web_contents_.Reset(isolate(), handle.ToV8());
 
   // Set inspected tabID.
-  base::Value tab_id(ID());
+  base::Value tab_id(GetID());
   managed_web_contents()->CallClientFunction(
       "DevToolsAPI.setInspectedTabId", &tab_id, nullptr, nullptr);
 

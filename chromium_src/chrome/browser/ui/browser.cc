@@ -34,20 +34,33 @@ bool IsFastTabUnloadEnabled() {
 
 }  // namespace
 
-Browser::CreateParams::CreateParams(Profile* profile)
+// static
+Browser::CreateParams Browser::CreateParams::CreateForDevTools(
+    Profile* profile) {
+  CreateParams params(TYPE_POPUP, profile, true);
+  params.app_name = DevToolsWindow::kDevToolsApp;
+  params.trusted_source = true;
+  return params;
+}
+
+Browser::CreateParams::CreateParams(Profile* profile, bool user_gesture)
     : type(TYPE_TABBED),
       profile(profile),
       trusted_source(false),
       initial_show_state(ui::SHOW_STATE_DEFAULT),
       is_session_restore(false),
+      user_gesture(user_gesture),
       window(NULL) {}
 
-Browser::CreateParams::CreateParams(Type type, Profile* profile)
+Browser::CreateParams::CreateParams(Type type,
+                                    Profile* profile,
+                                    bool user_gesture)
     : type(type),
       profile(profile),
       trusted_source(false),
       initial_show_state(ui::SHOW_STATE_DEFAULT),
       is_session_restore(false),
+      user_gesture(user_gesture),
       window(NULL) {}
 
 Browser::CreateParams::CreateParams(const CreateParams& other) = default;
@@ -79,6 +92,10 @@ bool Browser::is_app() const {
   return !app_name_.empty();
 }
 
+bool Browser::is_devtools() const {
+  return app_name_ == DevToolsWindow::kDevToolsApp;
+}
+
 bool Browser::ShouldRunUnloadListenerBeforeClosing(
     content::WebContents* web_contents) {
   return false;
@@ -95,6 +112,10 @@ void Browser::RegisterKeepAlive() {
 }
 void Browser::UnregisterKeepAlive() {
   keep_alive_.reset();
+}
+
+content::WebContents* Browser::OpenURL(const content::OpenURLParams& params) {
+  return nullptr;
 }
 
 bool Browser::SupportsWindowFeature(WindowFeature feature) const {

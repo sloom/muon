@@ -6,7 +6,6 @@
 
 #include "browser/browser_client.h"
 #include "browser/inspectable_web_contents_impl.h"
-#include "browser/network_delegate.h"
 #include "browser/special_storage_policy.h"
 #include "chrome/common/chrome_paths.h"
 #include "common/application_info.h"
@@ -138,10 +137,6 @@ net::URLRequestContextGetter* BrowserContext::CreateRequestContext(
       std::move(protocol_interceptors));
   resource_context_->set_url_request_context_getter(url_request_getter_.get());
   return url_request_getter_.get();
-}
-
-net::NetworkDelegate* BrowserContext::CreateNetworkDelegate() {
-  return new NetworkDelegate;
 }
 
 base::FilePath BrowserContext::GetPath() const {

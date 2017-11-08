@@ -1,0 +1,71 @@
+# Copyright 2017 The Brave Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/features.gni")
+import("//build/config/ui.gni")
+import("//chrome/common/features.gni")
+import("//extensions/features/features.gni")
+import("//media/media_options.gni")
+import("//mojo/public/tools/bindings/mojom.gni")
+import("//rlz/features/features.gni")
+
+assert(enable_extensions)
+
+source_set("extensions") {
+  configs += [ "//electron/build:electron_config" ]
+  configs += [ "//electron/chromium_src:chromium_src_config" ]
+
+  sources = [
+    "api/messaging/incognito_connectability.cc",
+    "//chrome/browser/extensions/api/messaging/incognito_connectability.h",
+    "//chrome/browser/extensions/api/messaging/chrome_messaging_delegate.cc",
+    "//chrome/browser/extensions/api/messaging/chrome_messaging_delegate.h",
+    "//chrome/browser/extensions/api/messaging/native_message_port.cc",
+    "//chrome/browser/extensions/api/messaging/native_message_port.h",
+    "//chrome/browser/extensions/api/messaging/native_messaging_host_manifest.cc",
+    "//chrome/browser/extensions/api/messaging/native_messaging_host_manifest.h",
+    "//chrome/browser/extensions/api/messaging/native_messaging_policy_handler.cc",
+    "//chrome/browser/extensions/api/messaging/native_messaging_policy_handler.h",
+    "//chrome/browser/extensions/api/messaging/native_message_process_host.cc",
+    "//chrome/browser/extensions/api/messaging/native_message_process_host.h",
+    "//chrome/browser/extensions/api/messaging/native_process_launcher.cc",
+    "//chrome/browser/extensions/api/messaging/native_process_launcher.h",
+    "//chrome/browser/extensions/api/messaging/native_process_launcher_posix.cc",
+    "//chrome/browser/extensions/api/messaging/native_process_launcher_win.cc",
+    "//chrome/browser/extensions/api/spellcheck/spellcheck_api.cc",
+    "//chrome/browser/extensions/api/spellcheck/spellcheck_api.h",
+    "//chrome/browser/extensions/api/tabs/tabs_constants.cc",
+    "//chrome/browser/extensions/api/tabs/tabs_constants.h",
+    "//chrome/browser/extensions/chrome_extension_api_frame_id_map_helper.cc",
+    "//chrome/browser/extensions/chrome_extension_api_frame_id_map_helper.h",
+    "//chrome/browser/extensions/chrome_extension_web_contents_observer.cc",
+    "//chrome/browser/extensions/chrome_extension_web_contents_observer.h",
+    "//chrome/browser/extensions/event_router_forwarder.cc",
+    "//chrome/browser/extensions/event_router_forwarder.h",
+    "extension_service.cc",
+    "extension_service.h",
+    "extension_tab_util.cc",
+    "//chrome/browser/extensions/extension_tab_util.h",
+    "extension_util.cc",
+    "//chrome/browser/extensions/extension_util.h",
+
+
+    "//chrome/browser/extensions/error_console/error_console.cc",
+    "//chrome/browser/extensions/error_console/error_console.h",
+    "//chrome/browser/extensions/error_console/error_console_factory.cc",
+    "//chrome/browser/extensions/error_console/error_console_factory.h",
+  ]
+
+  configs += [
+    "//build/config:precompiled_headers",
+    "//build/config/compiler:wexit_time_destructors",
+  ]
+
+  deps = [
+    "//components/spellcheck/browser",
+    "//extensions/browser",
+    "//rlz/features",
+  ]
+
+}

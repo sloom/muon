@@ -11,10 +11,10 @@
 #include "atom/browser/ui/file_dialog.h"
 #include "base/bind.h"
 #include "base/files/file_util.h"
+#include "chrome/browser/download/download_prefs.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/common/pref_names.h"
 #include "components/prefs/pref_service.h"
-#include "content/public/browser/browser_context.h"
 #include "content/public/browser/browser_thread.h"
 #include "content/public/browser/download_manager.h"
 #include "net/base/filename_util.h"
@@ -29,8 +29,10 @@ const DownloadPathReservationTracker::FilenameConflictAction
 }  // namespace
 
 AtomDownloadManagerDelegate::AtomDownloadManagerDelegate(
-    content::DownloadManager* manager)
+    content::DownloadManager* manager, Profile* profile)
     : download_manager_(manager),
+      profile_(profile),
+      download_prefs_(new DownloadPrefs(profile)),
       weak_ptr_factory_(this) {}
 
 AtomDownloadManagerDelegate::~AtomDownloadManagerDelegate() {
@@ -95,9 +97,7 @@ void AtomDownloadManagerDelegate::OnDownloadPathGenerated(
   settings.default_path = target_path;
   if (path.empty() && file_dialog::ShowSaveDialog(settings, &path)) {
     // Remember the last selected download directory.
-    Profile* profile = static_cast<Profile*>(
-        download_manager_->GetBrowserContext());
-    profile->GetPrefs()->SetFilePath(prefs::kDownloadDefaultDirectory,
+    profile_->GetPrefs()->SetFilePath(prefs::kDownloadDefaultDirectory,
                                           path.DirName());
   }
 
@@ -125,9 +125,7 @@ bool AtomDownloadManagerDelegate::DetermineDownloadTarget(
     const content::DownloadTargetCallback& callback) {
   DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
 
-  Profile* browser_context = static_cast<Profile*>(
-      download_manager_->GetBrowserContext());
-  base::FilePath default_download_path(browser_context->GetPrefs()->GetFilePath(
+  base::FilePath default_download_path(profile_->GetPrefs()->GetFilePath(
       prefs::kDownloadDefaultDirectory));
 
   DownloadPathReservationTracker::FilenameConflictAction conflict_action =

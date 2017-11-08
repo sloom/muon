@@ -14,8 +14,6 @@
 
 namespace atom {
 
-class AtomDownloadManagerDelegate;
-
 class AtomBrowserContext : public brightray::BrowserContext {
  public:
   // Get or create the BrowserContext according to its |partition| and
@@ -26,7 +24,6 @@ class AtomBrowserContext : public brightray::BrowserContext {
       const base::DictionaryValue& options = base::DictionaryValue());
 
   // brightray::URLRequestContextGetter::Delegate:
-  net::NetworkDelegate* CreateNetworkDelegate() override;
   std::unique_ptr<net::URLRequestJobFactory> CreateURLRequestJobFactory(
       content::ProtocolHandlerMap* protocol_handlers) override;
   net::HttpCache::BackendFactory* CreateHttpCacheBackendFactory(
@@ -35,14 +32,10 @@ class AtomBrowserContext : public brightray::BrowserContext {
   net::SSLConfigService* CreateSSLConfigService() override;
   std::vector<std::string> GetCookieableSchemes() override;
 
-  // content::BrowserContext:
-  content::DownloadManagerDelegate* GetDownloadManagerDelegate() override;
-
   // brightray::BrowserContext:
   void RegisterPrefs(PrefRegistrySimple* pref_registry) override;
 
-  virtual AtomNetworkDelegate* network_delegate() {
-      return network_delegate_; }
+  virtual AtomNetworkDelegate* network_delegate() = 0;
 
  protected:
   AtomBrowserContext(const std::string& partition, bool in_memory,
@@ -50,7 +43,6 @@ class AtomBrowserContext : public brightray::BrowserContext {
   ~AtomBrowserContext() override;
 
  private:
-  std::unique_ptr<AtomDownloadManagerDelegate> download_manager_delegate_;
   bool use_cache_;
 
   // Managed by brightray::BrowserContext.

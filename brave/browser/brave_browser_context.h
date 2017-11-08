@@ -23,6 +23,10 @@
 
 class PrefChangeRegistrar;
 
+namespace atom {
+class AtomDownloadManagerDelegate;
+}
+
 namespace sync_preferences {
 class PrefServiceSyncable;
 }
@@ -63,6 +67,7 @@ class BraveBrowserContext : public Profile {
   bool HasParentContext();
 
   // content::BrowserContext:
+  content::DownloadManagerDelegate* GetDownloadManagerDelegate() override;
   content::PermissionManager* GetPermissionManager() override;
   content::ResourceContext* GetResourceContext() override;
   net::NetworkDelegate* CreateNetworkDelegate() override;
@@ -162,6 +167,8 @@ class BraveBrowserContext : public Profile {
       protocol_handler_interceptor_;
 
   Profile::Delegate* delegate_;
+
+  std::unique_ptr<atom::AtomDownloadManagerDelegate> download_manager_delegate_;
 
   DISALLOW_COPY_AND_ASSIGN(BraveBrowserContext);
 };
