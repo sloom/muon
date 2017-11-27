@@ -107,7 +107,7 @@ void Debugger::Detach() {
   if (!agent_host_.get())
     return;
   agent_host_->DetachClient(this);
-  AgentHostClosed(agent_host_.get(), false);
+  AgentHostClosed(agent_host_.get());
   agent_host_ = nullptr;
 }
 
