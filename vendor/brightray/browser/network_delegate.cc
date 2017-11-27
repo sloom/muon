@@ -82,8 +82,8 @@ void NetworkDelegate::OnBeforeRedirect(net::URLRequest* request,
                                             const GURL& new_location) {
 }
 
-void NetworkDelegate::OnResponseStarted(net::URLRequest* request) {
-}
+void NetworkDelegate::OnResponseStarted(net::URLRequest* request,
+                                        int net_error) {}
 
 void NetworkDelegate::OnNetworkBytesReceived(net::URLRequest* request,
                                              int64_t bytes_read) {

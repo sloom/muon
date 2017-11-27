@@ -207,12 +207,11 @@ void AtomExtensionsNetworkDelegate::OnBeforeRedirect(
       request, new_location);
 }
 
-void AtomExtensionsNetworkDelegate::OnResponseStarted(
-    net::URLRequest* request) {
-  atom::AtomNetworkDelegate::OnResponseStarted(request);
+void AtomExtensionsNetworkDelegate::OnResponseStarted(net::URLRequest* request,
+                                                      int net_error) {
+  atom::AtomNetworkDelegate::OnResponseStarted(request, net_error);
   ExtensionWebRequestEventRouter::GetInstance()->OnResponseStarted(
-      browser_context_, extension_info_map_.get(),
-      request);
+      browser_context_, extension_info_map_.get(), request, net_error);
 }
 
 void AtomExtensionsNetworkDelegate::OnCompleted(

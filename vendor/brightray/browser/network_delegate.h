@@ -39,7 +39,7 @@ class NetworkDelegate : public net::NetworkDelegate {
       GURL* allowed_unsafe_redirect_url) override;
   void OnBeforeRedirect(net::URLRequest* request,
                         const GURL& new_location) override;
-  void OnResponseStarted(net::URLRequest* request) override;
+  void OnResponseStarted(net::URLRequest* request, int net_error) override;
   void OnNetworkBytesReceived(net::URLRequest* request,
                               int64_t bytes_read) override;
   void OnNetworkBytesSent(net::URLRequest* request,
