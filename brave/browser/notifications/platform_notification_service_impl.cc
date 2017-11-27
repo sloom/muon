@@ -109,8 +109,7 @@ void PlatformNotificationServiceImpl::DisplayNotification(
     const std::string& notification_id,
     const GURL& origin,
     const content::PlatformNotificationData& notification_data,
-    const content::NotificationResources& notification_resources,
-    base::Closure* cancel_callback) {
+    const content::NotificationResources& notification_resources) {
   brightray::NotificationDelegate* delegate =
       new brightray::NotificationDelegate(notification_id);
   // cancel_callback must be set when this method returns, but the
@@ -119,6 +118,8 @@ void PlatformNotificationServiceImpl::DisplayNotification(
   // notification is available
   std::unique_ptr<NotificationProxy> notification_proxy(new NotificationProxy);
 
+  // FIXME: https://chromium-review.googlesource.com/744205
+  /*
   auto callback = base::Bind(&OnWebNotificationAllowed,
              BraveContentBrowserClient::Get(),
              notification_resources.notification_icon,
@@ -136,6 +137,7 @@ void PlatformNotificationServiceImpl::DisplayNotification(
   permission_manager->RequestPermission(
       content::PermissionType::NOTIFICATIONS, NULL, origin, false,
         base::Bind(&OnPermissionResponse, callback));
+  */
 }
 
 void PlatformNotificationServiceImpl::DisplayPersistentNotification(
@@ -146,6 +148,10 @@ void PlatformNotificationServiceImpl::DisplayPersistentNotification(
     const content::PlatformNotificationData& notification_data,
     const content::NotificationResources& notification_resources) {
 }
+
+void PlatformNotificationServiceImpl::CloseNotification(
+    content::BrowserContext* browser_context,
+    const std::string& notification_id) {}
 
 void PlatformNotificationServiceImpl::ClosePersistentNotification(
     content::BrowserContext* browser_context,

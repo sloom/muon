@@ -72,10 +72,11 @@ void PlatformNotificationService::DisplayNotification(
     const std::string& notification_id,
     const GURL& origin,
     const content::PlatformNotificationData& notification_data,
-    const content::NotificationResources& notification_resources,
-    base::Closure* cancel_callback) {
+    const content::NotificationResources& notification_resources) {
   NotificationDelegate* delegate =
       new NotificationDelegate(notification_id);
+  // FIXME: https://chromium-review.googlesource.com/744205
+  /*
   browser_client_->WebNotificationAllowed(
       render_process_id_,
       base::Bind(&OnWebNotificationAllowed,
@@ -83,8 +84,13 @@ void PlatformNotificationService::DisplayNotification(
                  notification_resources.notification_icon,
                  notification_data,
                  base::Passed(&delegate),
-                 cancel_callback));
+                 ));
+  */
 }
+
+void PlatformNotificationService::CloseNotification(
+    content::BrowserContext* browser_context,
+    const std::string& notification_id) {}
 
 void PlatformNotificationService::DisplayPersistentNotification(
     content::BrowserContext* browser_context,
