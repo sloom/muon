@@ -35,12 +35,8 @@ Debugger::Debugger(v8::Isolate* isolate, content::WebContents* web_contents)
 Debugger::~Debugger() {
 }
 
-void Debugger::AgentHostClosed(DevToolsAgentHost* agent_host,
-                               bool replaced_with_another_client) {
-  std::string detach_reason = "target closed";
-  if (replaced_with_another_client)
-    detach_reason = "replaced with devtools";
-  Emit("detach", detach_reason);
+void Debugger::AgentHostClosed(DevToolsAgentHost* agent_host) {
+  Emit("detach", "target closed");
 }
 
 void Debugger::DispatchProtocolMessage(DevToolsAgentHost* agent_host,
