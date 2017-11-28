@@ -5,6 +5,7 @@
 #include "chrome/browser/net/system_network_context_manager.h"
 
 #include "chrome/browser/net/default_network_context_params.h"
+#include "net/net_features.h"
 
 SystemNetworkContextManager::SystemNetworkContextManager() {}
 SystemNetworkContextManager::~SystemNetworkContextManager() {}
