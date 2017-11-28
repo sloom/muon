@@ -6,7 +6,6 @@
 
 #include <string>
 #include <vector>
-
 #include "atom/browser/ui/views/menu_bar.h"
 #include "atom/browser/window_list.h"
 #include "atom/common/color_util.h"
@@ -46,6 +45,7 @@
 #include "ui/views/widget/desktop_aura/desktop_window_tree_host_x11.h"
 #include "ui/views/window/native_frame_view.h"
 #elif defined(OS_WIN)
+#include <wrl/client.h>
 #include "atom/browser/ui/views/win_frame_view.h"
 #include "atom/browser/ui/win/atom_desktop_window_tree_host_win.h"
 #include "skia/ext/skia_utils_win.h"
@@ -750,7 +750,7 @@ void NativeWindowViews::FlashFrame(bool flash) {
 
 void NativeWindowViews::SetSkipTaskbar(bool skip) {
 #if defined(OS_WIN)
-  base::win::ScopedComPtr<ITaskbarList> taskbar;
+  Microsoft::WRL::ComPtr<ITaskbarList> taskbar;
   if (FAILED(::CoCreateInstance(CLSID_TaskbarList, nullptr,
                                 CLSCTX_INPROC_SERVER,
                                 IID_PPV_ARGS(&taskbar))) ||
