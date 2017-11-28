@@ -427,12 +427,13 @@ void TabHelper::SetBrowser(Browser* browser) {
       index_ = browser_->tab_strip_model()->count();
     } else if (is_invalid_tab_index) {
       index_ =
-        // FIXME: The OrderController is exposed just for unit testing pursposes.
-        static_cast<TabStripModelImpl*>(browser->tab_strip_model())->order_controller()->
-        DetermineInsertionIndex(ui::PAGE_TRANSITION_LINK,
-                                active_ ?
-                                TabStripModel::ADD_ACTIVE :
-                                TabStripModel::ADD_NONE);
+          // FIXME: The OrderController is exposed just for unit testing
+          // pursposes.
+          static_cast<TabStripModelImpl*>(browser->tab_strip_model())
+              ->order_controller()
+              ->DetermineInsertionIndex(ui::PAGE_TRANSITION_LINK,
+                                        active_ ? TabStripModel::ADD_ACTIVE
+                                                : TabStripModel::ADD_NONE);
     } else if (index_ < TabStripModel::kNoTab) {
       // hack for browserAction
       // TODO(bridiver) - use extension view
