@@ -309,6 +309,7 @@ void BraveContentBrowserClient::ExposeInterfacesToRenderer(
   scoped_refptr<base::SingleThreadTaskRunner> ui_task_runner =
       content::BrowserThread::GetTaskRunnerForThread(
           content::BrowserThread::UI);
+  /*
 #if BUILDFLAG(ENABLE_SPELLCHECK)
   registry->AddInterface(
       base::Bind(&SpellCheckHostImpl::Create, render_process_host->GetID()),
@@ -318,6 +319,7 @@ void BraveContentBrowserClient::ExposeInterfacesToRenderer(
       ui_task_runner);
 #endif
 #endif
+  */
 
   Profile* profile =
       Profile::FromBrowserContext(render_process_host->GetBrowserContext());
