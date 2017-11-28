@@ -23,6 +23,7 @@
 #include "chrome/browser/ui/browser_list.h"
 #include "chrome/browser/ui/tab_contents/tab_contents_iterator.h"
 #include "chrome/browser/ui/tabs/tab_strip_model.h"
+#include "chrome/browser/ui/tabs/tab_strip_model_impl.h"
 #include "chrome/browser/ui/tabs/tab_strip_model_order_controller.h"
 #include "components/sessions/core/session_id.h"
 #include "content/public/browser/browser_context.h"
@@ -426,7 +427,8 @@ void TabHelper::SetBrowser(Browser* browser) {
       index_ = browser_->tab_strip_model()->count();
     } else if (is_invalid_tab_index) {
       index_ =
-        browser_->tab_strip_model()->order_controller()->
+        // FIXME: The OrderController is exposed just for unit testing pursposes.
+        static_cast<TabStripModelImpl*>(browser->tab_strip_model())->order_controller()->
         DetermineInsertionIndex(ui::PAGE_TRANSITION_LINK,
                                 active_ ?
                                 TabStripModel::ADD_ACTIVE :

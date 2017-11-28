@@ -16,6 +16,7 @@
 #include "base/memory/memory_pressure_listener.h"
 #include "base/memory/weak_ptr.h"
 #include "chrome/browser/ui/tabs/tab_strip_model_observer.h"
+#include "chrome/browser/ui/tabs/tab_strip_model_impl.h"
 #include "content/common/cursors/webcursor.h"
 #include "content/common/view_messages.h"
 #include "content/public/browser/service_worker_context.h"
@@ -28,6 +29,7 @@
 
 class ProtocolHandler;
 class TabStripModel;
+class TabStripModelImpl;
 
 namespace autofill {
 class AtomAutofillClient;

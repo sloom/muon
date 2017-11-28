@@ -695,7 +695,8 @@ void WebContents::AddNewContents(content::WebContents* source,
       }
       if (browser) {
         int index =
-          browser->tab_strip_model()->order_controller()->
+            // FIXME: The OrderController is exposed just for unit testing pursposes.
+            static_cast<TabStripModelImpl*>(browser->tab_strip_model())->order_controller()->
             DetermineInsertionIndex(ui::PAGE_TRANSITION_LINK,
                                     active ?
                                     TabStripModel::ADD_ACTIVE :
