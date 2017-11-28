@@ -167,6 +167,7 @@ source_set("browser") {
     "//content/public/browser",
     "//electron/atom/browser",
     "//ui/message_center",
+    "//net:features",
   ]
 
   sources = [
