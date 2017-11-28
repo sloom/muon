@@ -202,7 +202,7 @@ int AtomBrowserMainParts::PreCreateThreads() {
   SecKeychainAddCallback(&KeychainCallback, 0, NULL);
 #endif  // defined(OS_MACOSX)
 
-  fake_browser_process_->PreCreateThreads();
+  fake_browser_process_->PreCreateThreads(*base::CommandLine::ForCurrentProcess());
 
   MuonCrashReporterClient::InitCrashReporting();
 
