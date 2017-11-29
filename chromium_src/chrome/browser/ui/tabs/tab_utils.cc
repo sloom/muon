@@ -6,7 +6,7 @@
 
 namespace chrome {
 
-bool CanToggleAudioMute(content::WebContents* contents) {
+bool CanToggleAudioMute(content::WebContents* contents, TabMutedReason reason) {
   NOTREACHED();
   return false;
 }
